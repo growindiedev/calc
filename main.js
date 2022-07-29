@@ -17,3 +17,7 @@ function divide(a, b) {
 function power(a, b) {
   return a ** b;
 }
+
+function operate(operator, a, b) {
+  return operator(a, b);
+}
