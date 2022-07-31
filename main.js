@@ -22,6 +22,8 @@ let operations = {
   power: (a, b) => {
     return a ** b;
   },
+
+  equal: (a, b) => {},
 };
 
 let operate = (a, operator, b) => {
@@ -34,9 +36,11 @@ let screen = document.querySelector(".screen");
 document.querySelectorAll("button").forEach((btn) =>
   btn.addEventListener("click", (e) => {
     //(screen.innerText += e.target.innerText)
+
     let value = e.target.value;
     let isNum = Array.from(btn.classList).includes("num");
     let isOperation = Array.from(btn.classList).includes("operate");
+    let isEqual = Array.from(btn.classList).includes("equal");
     let result = 0;
 
     if (isNum) {
@@ -45,21 +49,29 @@ document.querySelectorAll("button").forEach((btn) =>
     } else if (isOperation) {
       storeOp = value;
       isOperation = false;
+    } else if (isEqual && store.length > 2) {
+      let res = operate(store[0], store[1], store[2]);
+      console.log("equal", res);
+      store = [];
+      return res;
     }
 
-    if (storeNum && storeOp) {
+    if (storeNum || storeOp) {
       let result;
-      store.push(storeNum);
-      store.push(storeOp);
+      storeNum && store.push(storeNum);
+      store[0] && storeOp && store.push(storeOp);
+      //isEqual && store.push(storeOp);
       if (store.length > 3) {
         console.log(store[0], store[1], store[2]);
         result = operate(store[0], store[1], store[2]);
-        if (store[3] == "equal") {
-          //complete this
-          screen.innerText = result;
-          console.log("rio", result);
-          return result;
-        }
+        console.log("rio", result);
+
+        // if (store[3] == "equal") {
+        //   //complete this
+        //   screen.innerText = result;
+        //   console.log("rio", result);
+        //   return result;
+        // }
         let newStore = [result, store[3]];
         store = newStore;
         console.log("store", store);
