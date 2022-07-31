@@ -35,8 +35,6 @@ let screen = document.querySelector(".screen");
 
 document.querySelectorAll("button").forEach((btn) =>
   btn.addEventListener("click", (e) => {
-    //(screen.innerText += e.target.innerText)
-
     let value = e.target.value;
     let isNum = Array.from(btn.classList).includes("num");
     let isOperation = Array.from(btn.classList).includes("operate");
@@ -59,8 +57,13 @@ document.querySelectorAll("button").forEach((btn) =>
     if (storeNum || storeOp) {
       let result;
       storeNum && store.push(storeNum);
-      store[0] && storeOp && store.push(storeOp);
-      //isEqual && store.push(storeOp);
+      if (store[0] && storeOp) {
+        store.push(storeOp);
+      } else if (!store.length && storeOp) {
+        store.push(0);
+        store.push(storeOp);
+      }
+      //store[0] && storeOp && store.push(storeOp);
       if (store.length > 3) {
         console.log(store[0], store[1], store[2]);
         result = operate(store[0], store[1], store[2]);
@@ -72,6 +75,7 @@ document.querySelectorAll("button").forEach((btn) =>
         //   console.log("rio", result);
         //   return result;
         // }
+
         let newStore = [result, store[3]];
         store = newStore;
         console.log("store", store);
@@ -79,5 +83,6 @@ document.querySelectorAll("button").forEach((btn) =>
       storeNum = 0;
       storeOp = 0;
     }
+    console.log("check", store);
   })
 );
