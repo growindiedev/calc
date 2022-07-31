@@ -67,5 +67,6 @@ document.querySelectorAll("button").forEach((btn) =>
       storeNum = 0;
       storeOp = 0;
     }
+    console.log("finalStore", store);
   })
 );
