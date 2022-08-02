@@ -45,3 +45,13 @@ button {
 .del-btn {
   grid-column: 3/-1;
 }
+
+.up {
+  border: 1px dotted green;
+  height: 1.5em;
+}
+
+.down {
+  border: 1px dotted blue;
+  height: 1.5em;
+}

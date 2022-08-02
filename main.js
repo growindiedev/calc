@@ -1,27 +1,32 @@
-let storeNum = 0;
+let storeNum = "";
 let storeOp = 0;
 let store = [];
+let display = 0;
+
+console.log("checkStoreNum", storeNum);
 
 let operations = {
-  add: (a, b) => {
+  "+": (a, b) => {
     return a + b;
   },
 
-  subtract: (a, b) => {
+  "-": (a, b) => {
     return a - b;
   },
 
-  multiply: (a, b) => {
+  x: (a, b) => {
     return a * b;
   },
 
-  divide: (a, b) => {
+  "÷": (a, b) => {
     return a / b;
   },
 
-  power: (a, b) => {
+  "^": (a, b) => {
     return a ** b;
   },
+
+  "=": (a, b) => {},
 };
 
 let operate = (a, operator, b) => {
@@ -29,44 +34,76 @@ let operate = (a, operator, b) => {
   return res;
 };
 
-let screen = document.querySelector(".screen");
+let screenTemplate = "";
+let upperScreen = document.querySelector(".up");
+let lowerScreen = document.querySelector(".down");
 
 document.querySelectorAll("button").forEach((btn) =>
   btn.addEventListener("click", (e) => {
-    //(screen.innerText += e.target.innerText)
     let value = e.target.value;
     let isNum = Array.from(btn.classList).includes("num");
     let isOperation = Array.from(btn.classList).includes("operate");
-    let result = 0;
+    let isEqual = Array.from(btn.classList).includes("equal");
 
     if (isNum) {
-      storeNum += value;
-      isNum = false;
+      if (value === "." && storeNum.includes(".")) {
+        isNum = false;
+      } else {
+        storeNum += value;
+        display = storeNum;
+        isNum = false;
+      }
     } else if (isOperation) {
       storeOp = value;
       isOperation = false;
+    } else if (isEqual && store.length > 1 && storeNum) {
+      let result = operate(store[0], store[1], storeNum);
+      lowerScreen.innerText = result;
+      console.log("equal", result);
+      store = [];
+      storeNum = "";
+      storeOp = 0;
+      return result;
     }
 
     if (storeNum && storeOp) {
-      let result;
+      //!Number(store[store.length - 1])
       store.push(storeNum);
+      display = storeNum;
+      storeNum = "";
+    }
+
+    if (!store.length && storeOp) {
+      store.push(0);
       store.push(storeOp);
-      if (store.length > 3) {
-        console.log(store[0], store[1], store[2]);
-        result = operate(store[0], store[1], store[2]);
-        if (store[3] == "equal") {
-          //complete this
-          screen.innerText = result;
-          console.log("rio", result);
-          return result;
-        }
-        let newStore = [result, store[3]];
-        store = newStore;
-        console.log("store", store);
-      }
-      storeNum = 0;
       storeOp = 0;
     }
-    console.log("finalStore", store);
+
+    if (!Object.keys(operations).includes(store[store.length - 1]) && storeOp) {
+      // do not push the storeOp if last array value have  storeOp
+      //here is the problem
+      store.push(storeOp);
+      storeOp = 0;
+    } else if (
+      Object.keys(operations).includes(store[store.length - 1]) &&
+      storeOp
+    ) {
+      store[store.length - 1] = storeOp;
+      storeOp = 0;
+    }
+    if (store.length > 3) {
+      console.log(store[0], store[1], store[2]);
+      let result = operate(store[0], store[1], store[2]);
+      console.log("res", result);
+      let newStore = [result, store[3]];
+      store = newStore;
+      console.log("store", store);
+      display = result;
+      storeNum = "";
+      storeOp = 0;
+    }
+    upperScreen.innerText = store.join(" ").toString();
+    lowerScreen.innerText = display;
+    
   })
 );
