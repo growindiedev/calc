@@ -106,6 +106,6 @@ document.querySelectorAll("button").forEach((btn) =>
     }
     upperScreen.innerText = store.join(" ").toString();
     lowerScreen.innerText = display;
-    console.log("checkStore", store);
+    
   })
 );
