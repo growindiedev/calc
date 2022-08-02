@@ -58,9 +58,11 @@ document.querySelectorAll("button").forEach((btn) =>
       isOperation = false;
     } else if (isEqual && store.length > 1 && storeNum) {
       let result = operate(store[0], store[1], storeNum);
+      upperScreen.innerText =
+        upperScreen.innerText = `${upperScreen.innerHTML} ${storeNum} =`;
       lowerScreen.innerText = result;
-      console.log("equal", result);
       store = [];
+      store.push(result);
       storeNum = "";
       storeOp = 0;
       return result;
