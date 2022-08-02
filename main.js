@@ -1,31 +1,32 @@
 let storeNum = "";
 let storeOp = 0;
 let store = [];
+let display = 0;
 
 console.log("checkStoreNum", storeNum);
 
 let operations = {
-  add: (a, b) => {
+  "+": (a, b) => {
     return a + b;
   },
 
-  subtract: (a, b) => {
+  "-": (a, b) => {
     return a - b;
   },
 
-  multiply: (a, b) => {
+  x: (a, b) => {
     return a * b;
   },
 
-  divide: (a, b) => {
+  "÷": (a, b) => {
     return a / b;
   },
 
-  power: (a, b) => {
+  "^": (a, b) => {
     return a ** b;
   },
 
-  equal: (a, b) => {},
+  "=": (a, b) => {},
 };
 
 let operate = (a, operator, b) => {
@@ -33,7 +34,9 @@ let operate = (a, operator, b) => {
   return res;
 };
 
-let screen = document.querySelector(".screen");
+let screenTemplate = "";
+let upperScreen = document.querySelector(".up");
+let lowerScreen = document.querySelector(".down");
 
 document.querySelectorAll("button").forEach((btn) =>
   btn.addEventListener("click", (e) => {
@@ -47,24 +50,27 @@ document.querySelectorAll("button").forEach((btn) =>
         isNum = false;
       } else {
         storeNum += value;
+        display = storeNum;
         isNum = false;
       }
     } else if (isOperation) {
       storeOp = value;
       isOperation = false;
     } else if (isEqual && store.length > 1 && storeNum) {
-      let res = operate(store[0], store[1], storeNum);
-      console.log("equal", res);
+      let result = operate(store[0], store[1], storeNum);
+      lowerScreen.innerText = result;
+      console.log("equal", result);
       store = [];
-      storeNum = 0;
+      storeNum = "";
       storeOp = 0;
-      return res;
+      return result;
     }
 
     if (storeNum && storeOp) {
       //!Number(store[store.length - 1])
       store.push(storeNum);
-      storeNum = 0;
+      display = storeNum;
+      storeNum = "";
     }
 
     if (!store.length && storeOp) {
@@ -87,15 +93,17 @@ document.querySelectorAll("button").forEach((btn) =>
     }
     if (store.length > 3) {
       console.log(store[0], store[1], store[2]);
-      result = operate(store[0], store[1], store[2]);
+      let result = operate(store[0], store[1], store[2]);
       console.log("res", result);
       let newStore = [result, store[3]];
       store = newStore;
       console.log("store", store);
-      storeNum = 0;
+      display = result;
+      storeNum = "";
       storeOp = 0;
-      //}
     }
+    upperScreen.innerText = store.join(" ").toString();
+    lowerScreen.innerText = display;
     console.log("checkStore", store);
   })
 );
