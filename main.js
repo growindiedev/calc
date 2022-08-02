@@ -25,8 +25,6 @@ let operations = {
   "^": (a, b) => {
     return a ** b;
   },
-
-  "=": (a, b) => {},
 };
 
 let operate = (a, operator, b) => {
@@ -34,9 +32,10 @@ let operate = (a, operator, b) => {
   return res;
 };
 
-let screenTemplate = "";
 let upperScreen = document.querySelector(".up");
 let lowerScreen = document.querySelector(".down");
+let backSpace = document.querySelector(".backspace");
+let resetBtn = document.querySelector(".reset");
 
 document.querySelectorAll("button").forEach((btn) =>
   btn.addEventListener("click", (e) => {
@@ -56,15 +55,20 @@ document.querySelectorAll("button").forEach((btn) =>
     } else if (isOperation) {
       storeOp = value;
       isOperation = false;
-    } else if (isEqual && store.length > 1 && storeNum) {
+    }
+
+    if (isEqual && store.length > 1 && storeNum) {
       let result = operate(store[0], store[1], storeNum);
       upperScreen.innerText =
-        upperScreen.innerText = `${upperScreen.innerHTML} ${storeNum} =`;
-      lowerScreen.innerText = result;
-      store = [];
-      store.push(result);
-      storeNum = "";
+        upperScreen.innerText = `${upperScreen.innerText} ${storeNum} =`;
+      //store.push(result);
+      storeNum = String(result);
+      display = storeNum;
+      lowerScreen.innerText = display;
+
       storeOp = 0;
+      store = [];
+      isNum = false;
       return result;
     }
 
@@ -99,13 +103,34 @@ document.querySelectorAll("button").forEach((btn) =>
       console.log("res", result);
       let newStore = [result, store[3]];
       store = newStore;
-      console.log("store", store);
+      //console.log("store", store);
       display = result;
       storeNum = "";
       storeOp = 0;
     }
+
     upperScreen.innerText = store.join(" ").toString();
     lowerScreen.innerText = display;
-    
+    console.log("storeNum", storeNum);
+    console.log("store", store);
   })
 );
+
+backSpace.addEventListener("click", (e) => {
+  //e.stopPropagation;
+  if (storeNum) {
+    storeNum = storeNum.slice(0, storeNum.length - 1);
+    display = storeNum;
+    lowerScreen.innerText = display;
+  }
+  console.log("boii", storeNum);
+});
+
+resetBtn.addEventListener("click", (e) => {
+  storeNum = "";
+  storeOp = 0;
+  store = [];
+  display = 0;
+  upperScreen.innerText = "";
+  lowerScreen.innerText = display;
+});
